@@ -3,11 +3,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5 import uic
 
-
+### 파일위치(이름)
 MAIN_WIDGET = "ui/mainWidget.ui"
 CANDLESTICK_ICON = "img/candlestick.png"
 NEXT_SECU_ICON = "img/next-securities.png"
-
+###
 
 # UI 파일 가져오기
 form_class = uic.loadUiType(MAIN_WIDGET)[0]
