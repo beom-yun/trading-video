@@ -72,6 +72,7 @@ while data:
         trades[new_trade["종목"]].append(new_trade)
         transactions[new_trade["종목"]].append(
             {
+                "ticker": new_trade["종목"],
                 "start_time": new_trade["일시"],
                 "end_time": None,
                 "type": new_trade["구분"],
