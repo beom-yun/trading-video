@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5 import uic
+from video import Video
 
 ### 파일위치(이름)
 MAIN_WIDGET = "ui/mainWidget.ui"
@@ -18,6 +19,8 @@ class MainWidget(QWidget, form_class):
         super().__init__()
         self.setupUi(self)
         self.initUi()
+
+        self.v = Video()
 
     def initUi(self):
         # 윈도우아이콘, 로고 설정
@@ -40,7 +43,12 @@ class MainWidget(QWidget, form_class):
         )
         if not csv_file[0]:
             return
-        print(video_file[0], csv_file[0])
+
+        # 녹화영상 파일 체크
+        res = self.v.open_video(video_file[0])
+        print(res)
+
+        # 거래내역 파일 체크
 
     # '초기화' 버튼 클릭
     def reset_file(self):
