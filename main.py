@@ -62,6 +62,9 @@ class MainWidget(QWidget, form_class):
             return
 
         res_v = self.v.open_video(video_file[0])
+        if not res_v["ok"]:
+            ##### 에러발생 다이얼로그 필요 #####
+            return
 
         # 영상 시작시간 설정
         # 파일명으로 시작시간을 알 수 없다면, dialog로 직접 입력받음
@@ -87,15 +90,18 @@ class MainWidget(QWidget, form_class):
             return
 
         res_tr = self.tr.open_tr(csv_file[0])
+        if not res_tr["ok"]:
+            ##### 에러발생 다이얼로그 필요 #####
+            return
 
         # 파일명, 거래횟수 label 입력
         self.lbl_csv_file.setText(res_tr["file_name"])
         self.lbl_csv_cnt.setText(str(res_tr["count"]))
 
-        print("영상 data")
-        print(res_v)
-        print("거래내역 data")
-        print(res_tr)
+        print("[ 영상 data ]")
+        print(self.v.data)
+        print("[ 거래내역 data ]")
+        print(self.tr.data)
 
     # '초기화' 버튼 클릭
     def reset_file(self):
