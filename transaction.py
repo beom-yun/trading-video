@@ -1,5 +1,5 @@
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import deque
 
 
@@ -9,6 +9,7 @@ class Transaction:
 
     def __init__(self):
         self.data = dict()
+        self.list_data = list()
 
     # mainWidget에서 '파일 열기' 동작
     def open_tr(self, file):
@@ -53,7 +54,6 @@ class Transaction:
             # trades : 종목별 청산내역 queue
             # self.data : 매매 트랜잭션(싸이클 시작에서부터 종료까지)
             trades = dict()
-            # self.data = dict()
 
             while data:
                 new_trade = data.popleft()
@@ -134,6 +134,8 @@ class Transaction:
                 if not trades[new_trade["종목"]]:
                     self.data[new_trade["종목"]][-1]["end_time"] = new_trade["일시"]
 
+            # data를 list형태로 저장해놓기
+            self.set_list_data()
             return {
                 "ok": True,
                 "file_name": file.split("/")[-1],  # 파일명
@@ -153,6 +155,30 @@ class Transaction:
             cnt += len(self.data[ticker])
         return cnt
 
+    # data의 리스트 형태
+    def set_list_data(self):
+        self.list_data.clear()
+        for v in self.data.values():
+            self.list_data += v
+        self.list_data.sort(key=lambda x: x["start_time"])
+
+    def get_list_data(self):
+        return self.list_data
+
+    def list_data_to_str(self):
+        ret = list()
+        for r in self.list_data:
+            text = [
+                f"{r['start_time'].strftime("%Y-%m-%d %H:%M:%S")}",
+                f'{r["ticker"]}',
+                f"{r['type']}진입",
+                f"{(r['end_time'] - r['start_time']).seconds}초 보유",
+                f"{"+" if r['pnl'] >= r['fee'] else ''}{r['pnl'] - r['fee']}",
+            ]
+            ret.append(" / ".join(text))
+        return ret
+
     # mainWidget에서 '초기화' 동작
     def reset_tr(self):
         self.data.clear()
+        self.list_data.clear()

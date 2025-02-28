@@ -98,10 +98,17 @@ class MainWidget(QWidget, form_class):
         self.lbl_csv_file.setText(res_tr["file_name"])
         self.lbl_csv_cnt.setText(str(res_tr["count"]))
 
-        print("[ 영상 data ]")
-        print(self.v.data)
-        print("[ 거래내역 data ]")
-        print(self.tr.data)
+        # print("[ 영상 data ]")
+        # print(self.v.data)
+        # print("[ 거래내역 data ]")
+        # print(self.tr.get_list_data())
+
+        list_items = self.tr.list_data_to_str()
+        for i in range(len(list_items)):
+            list_items[i] = QListWidgetItem(list_items[i])
+            list_items[i].setCheckState(False)
+            self.list_widget.addItem(list_items[i])
+            ############################## 여기 할 차례
 
     # '초기화' 버튼 클릭
     def reset_file(self):
