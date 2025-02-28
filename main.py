@@ -4,6 +4,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5 import uic
 from video import Video
 from transaction import Transaction
+from utils import *
 
 ### 파일위치(이름)
 MAIN_WIDGET = "ui/mainWidget.ui"
@@ -76,7 +77,7 @@ class MainWidget(QWidget, form_class):
 
         # 파일명, 영상길이 label 입력
         self.lbl_video_file.setText(res_v["file_name"])
-        self.lbl_video_duration.setText(str(res_v["duration"]))
+        self.lbl_video_duration.setText(seconds_to_str(res_v["duration"]))
 
         # 거래내역 파일 체크
         csv_file = QFileDialog.getOpenFileName(
