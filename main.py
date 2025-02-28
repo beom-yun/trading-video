@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5 import uic
 from video import Video
+from transaction import Transaction
 
 ### 파일위치(이름)
 MAIN_WIDGET = "ui/mainWidget.ui"
@@ -39,6 +40,7 @@ class MainWidget(QWidget, form_class):
         self.initUi()
 
         self.v = Video()
+        self.tr = Transaction()
 
     def initUi(self):
         # 윈도우아이콘, 로고 설정
@@ -73,9 +75,8 @@ class MainWidget(QWidget, form_class):
             return
 
         # 파일명, 영상길이 label 입력
-        self.lbl_video_file.setText(str(res_v["file_name"]))
+        self.lbl_video_file.setText(res_v["file_name"])
         self.lbl_video_duration.setText(str(res_v["duration"]))
-        # print(res_v)
 
         # 거래내역 파일 체크
         csv_file = QFileDialog.getOpenFileName(
@@ -83,6 +84,17 @@ class MainWidget(QWidget, form_class):
         )
         if not csv_file[0]:
             return
+
+        res_tr = self.tr.open_tr(csv_file[0])
+
+        # 파일명, 거래횟수 label 입력
+        self.lbl_csv_file.setText(res_tr["file_name"])
+        self.lbl_csv_cnt.setText(str(res_tr["count"]))
+
+        print("영상 data")
+        print(res_v)
+        print("거래내역 data")
+        print(res_tr)
 
     # '초기화' 버튼 클릭
     def reset_file(self):
