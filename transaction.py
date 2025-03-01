@@ -16,7 +16,7 @@ class Transaction:
         try:
             # csv로부터 체결내역 가져오기(TR 3414)
             csv_data = list()
-            with open(file) as f:
+            with open(file, encoding="cp949") as f:
                 reader = csv.reader(f)
                 for row in reader:
                     for i in range(len(row)):
