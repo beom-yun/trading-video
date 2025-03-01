@@ -109,7 +109,7 @@ class MainWidget(QWidget, form_class):
         self.btn_make.setEnabled(True)
 
         # list widget에 출력
-        list_items = self.tr.list_data_to_str()
+        list_items = self.tr.get_list_data_str()[:]
         for i in range(len(list_items)):
             list_items[i] = QListWidgetItem(list_items[i])
             list_items[i].setCheckState(False)
@@ -155,8 +155,12 @@ class MainWidget(QWidget, form_class):
         for i in range(self.list_widget.count()):
             if bool(self.list_widget.item(i).checkState()):
                 checked.append(i)
-        print(checked)
-        ##### 영상 만들기!! #####
+
+        list_data = self.tr.get_list_data()[:]
+        list_data_str = self.tr.get_list_data_str()[:]
+        for i in checked:
+            print(list_data[i], list_data_str[i])
+            ##### 영상 만들기!! #####
 
 
 if __name__ == "__main__":

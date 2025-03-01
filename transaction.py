@@ -10,6 +10,7 @@ class Transaction:
     def __init__(self):
         self.data = dict()
         self.list_data = list()
+        self.list_data_str = list()
 
     # mainWidget에서 '파일 열기' 동작
     def open_tr(self, file):
@@ -136,6 +137,7 @@ class Transaction:
 
             # data를 list형태로 저장해놓기
             self.set_list_data()
+            self.set_list_data_str()
             return {
                 "ok": True,
                 "file_name": file.split("/")[-1],  # 파일명
@@ -165,8 +167,9 @@ class Transaction:
     def get_list_data(self):
         return self.list_data
 
-    def list_data_to_str(self):
-        ret = list()
+    # data 리스트의 문자열 형태
+    def set_list_data_str(self):
+        self.list_data_str.clear()
         for r in self.list_data:
             text = [
                 f"{r['start_time'].strftime("%Y-%m-%d %H:%M:%S")}",
@@ -175,10 +178,13 @@ class Transaction:
                 f"{(r['end_time'] - r['start_time']).seconds}초 보유",
                 f"{"+" if r['pnl'] >= r['fee'] else ''}{r['pnl'] - r['fee']}",
             ]
-            ret.append(" / ".join(text))
-        return ret
+            self.list_data_str.append(" / ".join(text))
+
+    def get_list_data_str(self):
+        return self.list_data_str
 
     # mainWidget에서 '초기화' 동작
     def reset_tr(self):
         self.data.clear()
         self.list_data.clear()
+        self.list_data_str.clear()

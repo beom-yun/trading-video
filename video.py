@@ -35,6 +35,10 @@ class Video:
                 "datetime_str": None,
             }
 
+    # listWidget으로부터 체크된 데이터 입력, 비디오클립 출력
+    def make_video(self, data):
+        pass
+
     # mainWidget에서 '초기화' 동작
     def reset_video(self):
         self.data = None
