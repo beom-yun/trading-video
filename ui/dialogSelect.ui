@@ -7,15 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>120</height>
+    <height>90</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>영상 시작시간 설정</string>
+   <string>거래내역</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="lbl">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -23,33 +23,20 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>녹화영상의 시작 시간을 설정해주세요</string>
+      <string>거래내역이 선택되지 않았습니다.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QDateTimeEdit" name="dateTimeEdit">
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="displayFormat">
-      <string>yyyy-MM-dd hh:mm:ss</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Ok</set>
      </property>
      <property name="centerButtons">
       <bool>true</bool>

@@ -9,6 +9,7 @@ from utils import *
 ### 파일위치(이름)
 MAIN_WIDGET = "ui/mainWidget.ui"
 DIALOG_VIDEO = "ui/dialogVideo.ui"
+DIALOG_SELECT = "ui/dialogSelect.ui"
 CANDLESTICK_ICON = "img/candlestick.png"
 NEXT_SECU_ICON = "img/next-securities.png"
 ###
@@ -20,6 +21,15 @@ DEFAULT_OFFSET = 5
 # UI 파일 가져오기
 form_class = uic.loadUiType(MAIN_WIDGET)[0]
 dlg_video = uic.loadUiType(DIALOG_VIDEO)[0]
+dlg_select = uic.loadUiType(DIALOG_SELECT)[0]
+
+
+class DialogSelect(QDialog, dlg_select):
+    def __init__(self, title="", text=""):
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle(title)
+        self.lbl.setText(text)
 
 
 class DialogVideo(QDialog, dlg_video):
@@ -156,11 +166,29 @@ class MainWidget(QWidget, form_class):
             if bool(self.list_widget.item(i).checkState()):
                 checked.append(i)
 
+        if not bool(checked):
+            dlg = DialogSelect(
+                title="선택해주세요", text="거래내역이 선택되지 않았습니다."
+            )
+            dlg.exec_()
+            return
+
+        # SpinBox로부터 offset값 가져오기
+        offset_s = self.edit_offset_start.value()
+        offset_e = self.edit_offset_end.value()
+
         list_data = self.tr.get_list_data()[:]
         list_data_str = self.tr.get_list_data_str()[:]
-        for i in checked:
-            print(list_data[i], list_data_str[i])
-            ##### 영상 만들기!! #####
+        for i, x in enumerate(checked):
+            # print(f"{i + 1} / {len(checked)}")
+            # 영상 만들기
+            self.v.make_video(
+                list_data[x],
+                list_data_str[x],
+                self.lbl_video_start_time.text(),
+                offset_s,
+                offset_e,
+            )
 
 
 if __name__ == "__main__":

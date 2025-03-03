@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from moviepy import *
 
 
@@ -36,8 +36,46 @@ class Video:
             }
 
     # listWidget으로부터 체크된 데이터 입력, 비디오클립 출력
-    def make_video(self, data):
-        pass
+    # data: 트랜잭션 / text: 문구 / start_time: 영상시작시간 / offset_start: 오프셋 시작 / offset_end: 오프셋 끝
+    def make_video(self, data, text, start_time, offset_start, offset_end):
+        video_start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+        video_end_time = video_start_time + timedelta(seconds=self.data.duration)
+        if self.is_in_the_video(video_start_time, video_end_time, data):
+            s = data["start_time"] - video_start_time - timedelta(seconds=offset_start)
+            e = data["end_time"] - video_start_time + timedelta(seconds=offset_end)
+            s = str(max(s, timedelta(hours=0, minutes=0, seconds=0)))
+            e = str(min(e, video_end_time - video_start_time))
+            clip = self.data.subclipped(s, e)
+
+            real_pnl = data["pnl"] - data["fee"]
+            if real_pnl >= 0:
+                real_pnl = "".join(["승(+", str(real_pnl), ")"])
+            else:
+                real_pnl = "".join(["패(", str(real_pnl), ")"])
+            file_name = (
+                " ".join(
+                    [
+                        data["start_time"].strftime("%Y-%m-%d"),
+                        data["start_time"].strftime("%H:%M:%S"),
+                        real_pnl,
+                    ]
+                )
+                + ".mp4"
+            )
+            clip.write_videofile(file_name)
+
+    # 해당 트랜잭션이 비디오 안에 포함되어 있는지 체크
+    def is_in_the_video(self, start_time, end_time, transaction) -> bool:
+        try:
+            if (
+                start_time <= transaction["start_time"]
+                and transaction["end_time"] <= end_time
+            ):
+                return True
+            else:
+                return False
+        except:
+            return False
 
     # mainWidget에서 '초기화' 동작
     def reset_video(self):
