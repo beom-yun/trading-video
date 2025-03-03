@@ -37,7 +37,7 @@ class Video:
 
     # listWidget으로부터 체크된 데이터 입력, 비디오클립 출력
     # data: 트랜잭션 / text: 문구 / start_time: 영상시작시간 / offset_start: 오프셋 시작 / offset_end: 오프셋 끝
-    def make_video(self, data, text, start_time, offset_start, offset_end):
+    def make_video(self, data, text, start_time, offset_start, offset_end, logger):
         video_start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
         video_end_time = video_start_time + timedelta(seconds=self.data.duration)
         if self.is_in_the_video(video_start_time, video_end_time, data):
@@ -62,7 +62,7 @@ class Video:
                 )
                 + ".mp4"
             )
-            clip.write_videofile(file_name)
+            clip.write_videofile(file_name, logger=logger)
 
     # 해당 트랜잭션이 비디오 안에 포함되어 있는지 체크
     def is_in_the_video(self, start_time, end_time, transaction) -> bool:

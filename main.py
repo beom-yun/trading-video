@@ -1,10 +1,12 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import pyqtSlot
 from PyQt5 import uic
 from video import Video
 from transaction import Transaction
 from utils import *
+from logger import ProgressLoggerThread
 
 ### 파일위치(이름)
 MAIN_WIDGET = "ui/mainWidget.ui"
@@ -52,6 +54,11 @@ class MainWidget(QWidget, form_class):
 
         self.v = Video()
         self.tr = Transaction()
+        self.logger = ProgressLoggerThread()
+
+        # logger 값 변경 시 pbar 변경 시그널-슬롯
+        self.logger.valueChanged.connect(self.pbar.setValue)
+        ##### progressbar가 실시간으로 변할 수 있도록 수정해야 함 #####
 
     def initUi(self):
         # 윈도우아이콘, 로고 설정
@@ -188,7 +195,13 @@ class MainWidget(QWidget, form_class):
                 self.lbl_video_start_time.text(),
                 offset_s,
                 offset_e,
+                self.logger,
             )
+
+    # @pyqtSlot(int)
+    # def pbar_value_changed(self, value):
+    #     print(value)
+    #     self.pbar.setValue(value)
 
 
 if __name__ == "__main__":
