@@ -1,4 +1,5 @@
 import math
+from datetime import datetime
 
 
 # 입력 : 초(float) / 출력 : 'OO시간 OO분 OO초'(str)
@@ -17,3 +18,11 @@ def seconds_to_str(seconds: float) -> str:
         ).strip()
     except:
         return ""
+
+
+def str_to_datetime(string: str, format: str = "%Y-%m-%d %H:%M:%S") -> datetime:
+    return datetime.strptime(string, format)
+
+
+def datetime_to_str(datetime: datetime, format: str = "%Y-%m-%d %H:%M:%S") -> str:
+    return datetime.strftime(format)

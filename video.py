@@ -1,5 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from moviepy import *
+from utils import str_to_datetime, datetime_to_str
+
+
+##### ToDo : 클립 영상에 text 추가하기 #####
 
 
 class Video:
@@ -13,8 +17,8 @@ class Video:
             self.data = VideoFileClip(file)
 
             try:
-                dt = datetime.strptime(name.split(".")[0], "%Y-%m-%d %H-%M-%S")
-                dt_str = dt.strftime("%Y-%m-%d %H:%M:%S")
+                dt = str_to_datetime(name.split(".")[0], "%Y-%m-%d %H-%M-%S")
+                dt_str = datetime_to_str(dt)
             except:
                 dt = None
                 dt_str = None
@@ -38,7 +42,7 @@ class Video:
     # listWidget으로부터 체크된 데이터 입력, 비디오클립 출력
     # data: 트랜잭션 / text: 문구 / start_time: 영상시작시간 / offset_start: 오프셋 시작 / offset_end: 오프셋 끝
     def make_video(self, data, text, start_time, offset_start, offset_end, logger):
-        video_start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+        video_start_time = str_to_datetime(start_time)
         video_end_time = video_start_time + timedelta(seconds=self.data.duration)
         if self.is_in_the_video(video_start_time, video_end_time, data):
             s = data["start_time"] - video_start_time - timedelta(seconds=offset_start)
@@ -55,8 +59,8 @@ class Video:
             file_name = (
                 " ".join(
                     [
-                        data["start_time"].strftime("%Y-%m-%d"),
-                        data["start_time"].strftime("%H:%M:%S"),
+                        datetime_to_str(data["start_time"], "%Y-%m-%d"),
+                        datetime_to_str(data["start_time"], "%H:%M:%S"),
                         real_pnl,
                     ]
                 )

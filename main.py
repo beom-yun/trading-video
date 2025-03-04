@@ -3,47 +3,20 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import pyqtSlot
 from PyQt5 import uic
+from dialogs import DialogText, DialogVideo
 from video import Video
 from transaction import Transaction
 from utils import *
 from logger import ProgressLoggerThread
+from constants import DEFAULT_OFFSET
 
-### 파일위치(이름)
+# 파일위치(이름)
 MAIN_WIDGET = "ui/mainWidget.ui"
-DIALOG_VIDEO = "ui/dialogVideo.ui"
-DIALOG_SELECT = "ui/dialogSelect.ui"
 CANDLESTICK_ICON = "img/candlestick.png"
 NEXT_SECU_ICON = "img/next-securities.png"
-###
-
-### 상수
-DEFAULT_OFFSET = 5
-###
 
 # UI 파일 가져오기
 form_class = uic.loadUiType(MAIN_WIDGET)[0]
-dlg_video = uic.loadUiType(DIALOG_VIDEO)[0]
-dlg_select = uic.loadUiType(DIALOG_SELECT)[0]
-
-
-class DialogSelect(QDialog, dlg_select):
-    def __init__(self, title="", text=""):
-        super().__init__()
-        self.setupUi(self)
-        self.setWindowTitle(title)
-        self.lbl.setText(text)
-
-
-class DialogVideo(QDialog, dlg_video):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-        self.buttonBox.accepted.connect(self.dialog_accepted)
-        self.video_start_time = None
-
-    def dialog_accepted(self):
-        self.video_start_time = self.dateTimeEdit.text()
-        self.close()
 
 
 class MainWidget(QWidget, form_class):
@@ -57,7 +30,8 @@ class MainWidget(QWidget, form_class):
         self.logger = ProgressLoggerThread()
 
         # logger 값 변경 시 pbar 변경 시그널-슬롯
-        self.logger.valueChanged.connect(self.pbar.setValue)
+        # self.logger.valueChanged.connect(self.pbar.setValue)
+        self.logger.valueChanged.connect(self.pbar_value_changed)
         ##### progressbar가 실시간으로 변할 수 있도록 수정해야 함 #####
 
     def initUi(self):
@@ -135,6 +109,7 @@ class MainWidget(QWidget, form_class):
     # '초기화' 버튼 클릭
     def reset_file(self):
         self.v.reset_video()
+        self.tr.reset_tr()
 
         # UI 초기화
         self.lbl_video_file.clear()
@@ -174,8 +149,9 @@ class MainWidget(QWidget, form_class):
                 checked.append(i)
 
         if not bool(checked):
-            dlg = DialogSelect(
-                title="선택해주세요", text="거래내역이 선택되지 않았습니다."
+            dlg = DialogText(
+                title="선택해주세요",
+                text="거래내역이 선택되지 않았습니다.",
             )
             dlg.exec_()
             return
@@ -198,10 +174,11 @@ class MainWidget(QWidget, form_class):
                 self.logger,
             )
 
-    # @pyqtSlot(int)
-    # def pbar_value_changed(self, value):
-    #     print(value)
-    #     self.pbar.setValue(value)
+    # logger의 값이 변할 때(signal), 값을 받는 slot
+    @pyqtSlot(int)
+    def pbar_value_changed(self, value):
+        print(value)
+        self.pbar.setValue(value)
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 import csv
-from datetime import datetime, timedelta
 from collections import deque
+from constants import MOCK_FEE, FEE
+from utils import str_to_datetime, datetime_to_str
+
+##### ToDo : 실전, 모의거래에 따른 수수료 구분기능 만들기 #####
 
 
 class Transaction:
-    MOCK_FEE = 14
-    FEE = 9.8
-
     def __init__(self):
         self.data = dict()
         self.list_data = list()
@@ -40,7 +40,7 @@ class Transaction:
             # 데이터 전처리
             for i in range(len(data)):
                 data[i] = {
-                    "일시": datetime.strptime(
+                    "일시": str_to_datetime(
                         f"{data[i]['체결일자']} {data[i]['체결시간']}",
                         "%Y/%m/%d %H:%M:%S",
                     ),
@@ -129,7 +129,7 @@ class Transaction:
                         )
                         new_trade["수량"] = new_trade["수량"] - x["수량"]
                         data.appendleft(new_trade)
-                    self.data[new_trade["종목"]][-1]["fee"] += self.MOCK_FEE * tr_size
+                    self.data[new_trade["종목"]][-1]["fee"] += MOCK_FEE * tr_size
 
                 # 매매 싸이클 종료
                 if not trades[new_trade["종목"]]:
@@ -172,7 +172,7 @@ class Transaction:
         self.list_data_str.clear()
         for r in self.list_data:
             text = [
-                f"{r['start_time'].strftime("%Y-%m-%d %H:%M:%S")}",
+                f"{datetime_to_str(r['start_time'])}",
                 f'{r["ticker"]}',
                 f"{r['type']}진입",
                 f"{(r['end_time'] - r['start_time']).seconds}초 보유",
