@@ -30,9 +30,7 @@ class MainWidget(QWidget, form_class):
         self.logger = ProgressLoggerThread()
 
         # logger 값 변경 시 pbar 변경 시그널-슬롯
-        # self.logger.valueChanged.connect(self.pbar.setValue)
-        self.logger.valueChanged.connect(self.pbar_value_changed)
-        ##### progressbar가 실시간으로 변할 수 있도록 수정해야 함 #####
+        self.logger.valueChanged.connect(self.pbar.setValue)
 
     def initUi(self):
         # 윈도우아이콘, 로고 설정
@@ -124,6 +122,8 @@ class MainWidget(QWidget, form_class):
         self.chk_text.setEnabled(False)
         self.chk_text.setChecked(False)
         self.list_widget.clear()
+        self.lbl_status.setText("대기 중...")
+        self.pbar.setValue(0)
         self.btn_make.setEnabled(False)
 
     # '전체 선택' 버튼 클릭
@@ -163,7 +163,7 @@ class MainWidget(QWidget, form_class):
         list_data = self.tr.get_list_data()[:]
         list_data_str = self.tr.get_list_data_str()[:]
         for i, x in enumerate(checked):
-            # print(f"{i + 1} / {len(checked)}")
+            self.lbl_status.setText(f"제작 중... ({i + 1}/{len(checked)})")
             # 영상 만들기
             self.v.make_video(
                 list_data[x],
@@ -173,12 +173,7 @@ class MainWidget(QWidget, form_class):
                 offset_e,
                 self.logger,
             )
-
-    # logger의 값이 변할 때(signal), 값을 받는 slot
-    @pyqtSlot(int)
-    def pbar_value_changed(self, value):
-        print(value)
-        self.pbar.setValue(value)
+        self.lbl_status.setText("완료")
 
 
 if __name__ == "__main__":

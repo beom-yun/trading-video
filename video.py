@@ -56,16 +56,7 @@ class Video:
                 real_pnl = "".join(["승(+", str(real_pnl), ")"])
             else:
                 real_pnl = "".join(["패(", str(real_pnl), ")"])
-            file_name = (
-                " ".join(
-                    [
-                        datetime_to_str(data["start_time"], "%Y-%m-%d"),
-                        datetime_to_str(data["start_time"], "%H:%M:%S"),
-                        real_pnl,
-                    ]
-                )
-                + ".mp4"
-            )
+            file_name = f'{datetime_to_str(data["start_time"], "%y%m%d-%H%M%S")} {data["ticker"]} {data["type"]} {real_pnl}.mp4'
             clip.write_videofile(file_name, logger=logger)
 
     # 해당 트랜잭션이 비디오 안에 포함되어 있는지 체크
